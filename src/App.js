@@ -1,38 +1,55 @@
 import React, { useState } from "react";
 
-const History = (props) => {
-  if (props.allClicks.length === 0) {
-    return <div>the app is used by pressing the buttons</div>;
-  }
-  return <div>button press history: {props.allClicks.join(" ")}</div>;
+const Header = ({ title }) => {
+  return <h1>{title}</h1>;
 };
 
-const Button = ({ handleClick, text }) => {
+const Button = ({ text, handleClick }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
+const Stat = ({ text, count }) => {
+  return (
+    <span>
+      {text} {count}
+    </span>
+  );
+};
+
+const Feedback = ({ counts }) => {
+  return (
+    <>
+      <Stat text="good" count={counts[0]} />
+      <br />
+      <Stat text="neutral" count={counts[1]} />
+      <br />
+      <Stat text="bad" count={counts[2]} />
+    </>
+  );
+};
+
 const App = () => {
-  const [left, setLeft] = useState(0);
-  const [right, setRight] = useState(0);
-  const [allClicks, setAll] = useState([]);
-
-  const handleLeftClick = () => {
-    setAll(allClicks.concat("L"));
-    setLeft(left + 1);
+  const unicafe = {
+    feedback: {
+      title: "give feedback",
+    },
+    statistics: {
+      title: "statistics",
+    },
   };
-
-  const handleRightClick = () => {
-    setAll(allClicks.concat("R"));
-    setRight(right + 1);
-  };
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   return (
     <div>
-      {left}
-      <Button handleClick={handleLeftClick} text="left" />
-      <Button handleClick={handleRightClick} text="right" />
-      {right}
-      <History allClicks={allClicks} />
+      <Header title={unicafe.feedback.title} />
+      <Button text="good" handleClick={() => setGood(good + 1)} />
+      <Button text="neutral" handleClick={() => setNeutral(neutral + 1)} />
+      <Button text="bad" handleClick={() => setBad(bad + 1)} />
+      <Header title={unicafe.statistics.title} />
+      <Feedback counts={[good, neutral, bad]} />
     </div>
   );
 };
